@@ -10,8 +10,12 @@ public class GreetingService {
         this.greetingRepository = greetingRepository;
     }
 
-    public Greeting saveGreeting(String message) {
-        Greeting greeting = new Greeting(message);
+    // Fetch Greeting by ID
+    public Greeting getGreetingById(Long id) {
+        return greetingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Greeting not found with ID: " + id));
+    }
+    public Greeting saveGreeting(Greeting greeting) {
         return greetingRepository.save(greeting);
     }
 }
