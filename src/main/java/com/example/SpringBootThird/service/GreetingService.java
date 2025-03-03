@@ -3,6 +3,9 @@ package com.example.SpringBootThird.service;
 import com.example.SpringBootThird.model.Greeting;
 import com.example.SpringBootThird.repository.GreetingRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 public class GreetingService {
     private final GreetingRepository greetingRepository;
 
@@ -18,4 +21,8 @@ public class GreetingService {
     public Greeting saveGreeting(Greeting greeting) {
         return greetingRepository.save(greeting);
     }
+    public List<Greeting> getAllGreetings() {
+        return greetingRepository.findAll();
+    }
+
 }

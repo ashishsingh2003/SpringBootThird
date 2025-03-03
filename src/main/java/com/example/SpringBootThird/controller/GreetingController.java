@@ -3,6 +3,8 @@ import com.example.SpringBootThird.model.Greeting;
 import com.example.SpringBootThird.service.GreetingService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/greeting")
 public class GreetingController {
@@ -21,5 +23,9 @@ public class GreetingController {
     @PostMapping("/save")
     public Greeting createGreeting(@RequestBody Greeting greeting) {
         return greetingService.saveGreeting(greeting);
+    }
+    @GetMapping
+    public List<Greeting> getAllGreetings() {
+        return greetingService.getAllGreetings();
     }
 }
