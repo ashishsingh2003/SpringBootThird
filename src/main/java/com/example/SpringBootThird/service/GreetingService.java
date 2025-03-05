@@ -5,7 +5,7 @@ import com.example.SpringBootThird.repository.GreetingRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class GreetingService {
     private final GreetingRepository greetingRepository;
 
