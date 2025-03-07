@@ -4,7 +4,8 @@ import com.example.SpringBootThird.model.Greeting;
 import com.example.SpringBootThird.repository.GreetingRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
+
 @Service
 public class GreetingService {
     private final GreetingRepository greetingRepository;
@@ -13,27 +14,30 @@ public class GreetingService {
         this.greetingRepository = greetingRepository;
     }
 
-    // Fetch Greeting by ID
-    public Greeting getGreetingById(Long id) {
-        return greetingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Greeting not found with ID: " + id));
-    }
-    public Greeting saveGreeting(Greeting greeting) {
+    public Greeting saveGreeting(String message) {
+        Greeting greeting = new Greeting(message);
         return greetingRepository.save(greeting);
     }
-    public List<Greeting> getAllGreetings() {
-        return greetingRepository.findAll();
+
+    public Greeting getGreetingById(Long id) {
+        return greetingRepository.findById(id).orElse(null);
     }
-    public Greeting updateGreeting(Long id, Greeting newGreeting) {
-        Greeting existingGreeting = greetingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Greeting not found with ID: " + id));
-        existingGreeting.setMessage(newGreeting.getMessage());
-        return greetingRepository.save(existingGreeting);
-    }
-    public void deleteGreeting(Long id) {
-        if (!greetingRepository.existsById(id)) {
-            throw new RuntimeException("Greeting not found with ID: " + id);
+
+    public Greeting updateGreeting(Long id, String newMessage) {
+        Optional<Greeting> existingGreeting = greetingRepository.findById(id);
+        if (existingGreeting.isPresent()) {
+            Greeting greeting = existingGreeting.get();
+            greeting.setMessage(newMessage);
+            return greetingRepository.save(greeting);
         }
-        greetingRepository.deleteById(id);
+        return null; // Return null if ID not found
+    }
+
+    public boolean deleteGreeting(Long id) {
+        if (greetingRepository.existsById(id)) {
+            greetingRepository.deleteById(id);
+            return true; // Return true if deletion is successful
+        }
+        return false; // Return false if ID does not exist
     }
 }

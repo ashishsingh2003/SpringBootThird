@@ -1,6 +1,8 @@
 package com.example.SpringBootThird.controller;
+
 import com.example.SpringBootThird.model.Greeting;
 import com.example.SpringBootThird.service.GreetingService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,32 +11,35 @@ import java.util.List;
 @RequestMapping("/greeting")
 public class GreetingController {
 
-    private final GreetingService greetingService;
+    @Autowired
+    GreetingService greetingService;
 
     public GreetingController(GreetingService greetingService) {
         this.greetingService = greetingService;
     }
 
-    // Fetch Greeting by ID
+    @PostMapping
+    public Greeting saveGreeting(@RequestParam String message) {
+        return greetingService.saveGreeting(message);
+    }
+
     @GetMapping("/{id}")
-    public Greeting getGreetingById(@PathVariable Long id) {
+    public Greeting getGreeting(@PathVariable Long id) {
         return greetingService.getGreetingById(id);
     }
-    @PostMapping("/save")
-    public Greeting createGreeting(@RequestBody Greeting greeting) {
-        return greetingService.saveGreeting(greeting);
-    }
-    @GetMapping
-    public List<Greeting> getAllGreetings() {
-        return greetingService.getAllGreetings();
-    }
+
     @PutMapping("/{id}")
-    public Greeting updateGreeting(@PathVariable Long id, @RequestBody Greeting newGreeting) {
-        return greetingService.updateGreeting(id, newGreeting);
+    public Greeting updateGreeting(@PathVariable Long id, @RequestParam String newMessage) {
+        return greetingService.updateGreeting(id, newMessage);
     }
+
     @DeleteMapping("/{id}")
     public String deleteGreeting(@PathVariable Long id) {
-        greetingService.deleteGreeting(id);
-        return "Greeting with ID " + id + " deleted successfully!";
+        boolean isDeleted = greetingService.deleteGreeting(id);
+        if (isDeleted) {
+            return "Greeting with ID " + id + " deleted successfully.";
+        } else {
+            return "Greeting with ID " + id + " not found.";
+        }
     }
 }
